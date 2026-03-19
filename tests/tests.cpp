@@ -221,3 +221,21 @@ TEST_CASE("post event ordering") {
     REQUIRE(ran3);
   }
 }
+
+TEST_CASE("post event with delay to simulation") {
+  simcpp20::simulation<> sim;
+
+  bool ran1 = false;
+  bool ran2 = false;
+
+  auto ev1 = sim.post([&ran1]() { ran1 = true; }, 2.0);
+  auto ev2 = sim.post([&ran2]() { ran2 = true; }, 1.0);
+
+  sim.step();
+  REQUIRE_FALSE(ran1);
+  REQUIRE(ran2);
+  
+  sim.step();
+  REQUIRE(ran1);
+  REQUIRE(ran2);
+}
