@@ -127,11 +127,19 @@ public:
     sev.ev_.process();
   }
 
-  /// Run the simulation until no more events are scheduled.
-  void run() {
-    while (!empty()) {
+  /**
+   * Run the simulation until no more events are scheduled.
+   * 
+   * @return Number of events processed.
+   */
+  std::size_t run() {
+    std::size_t count = 0;
+
+    for (; !empty(); count++) {
       step();
     }
+
+    return count;
   }
 
   /**

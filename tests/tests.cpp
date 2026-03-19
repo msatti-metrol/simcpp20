@@ -167,3 +167,17 @@ TEST_CASE("all_of") {
     REQUIRE(finished);
   }
 }
+
+TEST_CASE("run returns number of events processed") {
+  simcpp20::simulation<> sim;
+
+  auto ev1 = sim.timeout(1);
+  auto ev2 = sim.timeout(2);
+  auto ev3 = sim.timeout(3);
+  auto ev4 = sim.timeout(3);
+  auto ev5 = sim.timeout(2);
+  auto ev6 = sim.timeout(1);
+
+  auto count = sim.run();
+  REQUIRE(count == 6);
+}
