@@ -63,6 +63,18 @@ public:
     schedule(ev, delay);
     return ev;
   }
+  
+  /**
+   * Posts a callback to be executed as soon as possible.
+   * @param callback Callback to invoke, which has the following signature: `void callback()`.
+   * @return New pending event.
+   */
+  event_type post(std::function<void()> callback) {
+    auto ev = event();
+    ev.add_callback(callback);
+    schedule(ev);
+    return ev;
+  }
 
   /**
    * @tparam Value Value type of the event.
