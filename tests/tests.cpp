@@ -181,3 +181,18 @@ TEST_CASE("run returns number of events processed") {
   auto count = sim.run();
   REQUIRE(count == 6);
 }
+
+TEST_CASE("run_until returns number of events processed") {
+  simcpp20::simulation<> sim;
+
+  auto ev1 = sim.timeout(1); // Should be run
+  auto ev2 = sim.timeout(2); // Should be run
+  auto ev3 = sim.timeout(3); // Should not be run
+  auto ev4 = sim.timeout(3); // Should not be run
+  auto ev5 = sim.timeout(2); // Should be run
+  auto ev6 = sim.timeout(1); // Should be run
+
+  auto count = sim.run_until(2.5);
+  REQUIRE(count == 4);
+  REQUIRE(count == 4);
+}
