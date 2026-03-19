@@ -194,5 +194,4 @@ TEST_CASE("run_until returns number of events processed") {
 
   auto count = sim.run_until(2.5);
   REQUIRE(count == 4);
-  REQUIRE(count == 4);
 }
