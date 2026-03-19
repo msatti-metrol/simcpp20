@@ -65,14 +65,15 @@ public:
   }
   
   /**
-   * Posts a callback to be executed as soon as possible.
+   * Posts a callback to be executed after the delay.
    * @param callback Callback to invoke, which has the following signature: `void callback()`.
+   * @param delay Delay before executing the callback. If default constructed, execute as soon as possible.
    * @return New pending event.
    */
-  event_type post(std::function<void()> callback) {
+  event_type post(std::function<void()> callback, Time delay = Time{0}) {
     auto ev = event();
     ev.add_callback(callback);
-    schedule(ev);
+    schedule(ev, delay);
     return ev;
   }
 
