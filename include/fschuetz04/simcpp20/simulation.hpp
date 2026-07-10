@@ -159,31 +159,41 @@ public:
   /**
    * Run the simulation for an amount of time or until no more events are
    * scheduled. The target time is reached when the next scheduled event is
-   * scheduled at or after the target time.
+   * optionally scheduled at, or after the target time.
    *
-   * @param delta Relative amount of time.
+   * @param delta Relative amount of time from now().
+   * @param inclusive Whether to include the target time.
    * @return Number of events processed.
    */
-  std::size_t run_for(Time delta) {
+  std::size_t run_for(Time delta, bool inclusive = false) {
     assert(delta >= Time{});
     Time target = now() + delta;
-    std::size_t count = run_until(target);
+    std::size_t count = run_until(target, inclusive);
     return count;
   }
 
   /**
    * Run the simulation until the target time is reached or no more events are
    * scheduled. The target time is reached when the next scheduled event is
-   * scheduled at or after the target time.
+   * optionally scheduled at, or after the target time.
    *
    * @param target Target time.
+   * @param inclusive Whether to include the target time.
    * @return Number of events processed.
    */
-  std::size_t run_until(Time target) {
+  std::size_t run_until(Time target, bool inclusive = false) {
     assert(target >= now());
     std::size_t count = 0;
 
-    for (; !empty() && scheduled_evs_.top().time_ < target; count++) {
+    auto predicate = [target, inclusive](scheduled_event& event)
+    {
+      if (inclusive)
+        return event.time_ <= target;
+      else
+        return event.time_ < target;
+    };
+
+    for (; !empty() && predicate(scheduled_evs_.top()); count++) {
       step();
     }
 
