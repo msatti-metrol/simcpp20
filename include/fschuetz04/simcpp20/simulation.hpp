@@ -157,6 +157,21 @@ public:
   }
 
   /**
+   * Run the simulation for an amount of time or until no more events are
+   * scheduled. The target time is reached when the next scheduled event is
+   * scheduled at or after the target time.
+   *
+   * @param delta Relative amount of time.
+   * @return Number of events processed.
+   */
+  std::size_t run_for(Time delta) {
+    assert(delta >= Time{});
+    Time target = now() + delta;
+    std::size_t count = run_until(target);
+    return count;
+  }
+
+  /**
    * Run the simulation until the target time is reached or no more events are
    * scheduled. The target time is reached when the next scheduled event is
    * scheduled at or after the target time.
@@ -176,6 +191,16 @@ public:
     return count;
   }
   
+  /**
+   * Run the simulation until the predicate returns true or no more events are
+   * scheduled. The target time is reached when the next scheduled event is
+   * scheduled at or after the target time.
+   *
+   * @param predicate Predicate to call.
+   * @param limit Optionally limit the number of times the predicate will be called. 
+   * If reached, no more steps() are performed and the function returns.
+   * @return Number of events processed.
+   */
   template<typename PredicateFnT>
   std::size_t run_until(PredicateFnT&& predicate, std::optional<std::size_t> limit) {
     std::size_t count = 0;
