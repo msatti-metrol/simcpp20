@@ -10,6 +10,7 @@
 #include <set>        // std::set
 #include <utility>    // std::forward
 #include <vector>     // std::vector
+#include <optional>   // std::optional
 
 #include "event.hpp"
 #include "process.hpp"
@@ -172,6 +173,17 @@ public:
     }
 
     now_ = target;
+    return count;
+  }
+  
+  template<typename PredicateFnT>
+  std::size_t run_until(PredicateFnT&& predicate, std::optional<std::size_t> limit) {
+    std::size_t count = 0;
+
+    for (; !empty() && !predicate() && (!limit || (count < *limit)); count++) {
+      step();
+    }
+
     return count;
   }
 
