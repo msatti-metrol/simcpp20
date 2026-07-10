@@ -185,7 +185,7 @@ public:
     assert(target >= now());
     std::size_t count = 0;
 
-    auto predicate = [target, inclusive](scheduled_event& event)
+    auto predicate = [target, inclusive](const scheduled_event& event)
     {
       if (inclusive)
         return event.time_ <= target;
